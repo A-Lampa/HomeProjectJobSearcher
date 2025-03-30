@@ -51,8 +51,6 @@ public abstract class AbstractPage implements InterfaceAbstractPage {
         String testName = getTestName();
         String className = getClassName();
 
-        deleteOldScreenshots(testName, className);
-
         File directory = new File(SCREENSHOT_FOLDER);
         if (!directory.exists()) {
             directory.mkdirs();
@@ -82,11 +80,11 @@ public abstract class AbstractPage implements InterfaceAbstractPage {
         screen(driver);
     }
 
-    private static String getTestName() {
+    public static String getTestName() {
         return Thread.currentThread().getStackTrace()[3].getMethodName();
     }
 
-    private static String getClassName() {
+    public static String getClassName() {
         return Thread.currentThread().getStackTrace()[3].getClassName().substring(
                 Thread.currentThread().getStackTrace()[3].getClassName().lastIndexOf(".") + 1);
     }
@@ -101,6 +99,31 @@ public abstract class AbstractPage implements InterfaceAbstractPage {
 
         File[] oldScreenshots = folder.listFiles((dir, name) ->
                 name.contains(testName) && name.contains(className) && name.endsWith(".png")
+        );
+
+        if (oldScreenshots != null) {
+            for (File file : oldScreenshots) {
+                if (file.delete()) {
+                    System.out.println("The old screenshot is deleted: " + file.getName());
+                } else {
+                    System.out.println("The old screenshot is not deleted: " + file.getName());
+                }
+            }
+        }
+    }
+
+    public static void deleteOldTodayScreenshots() {
+        String timestampToday = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        File folder = new File(SCREENSHOT_FOLDER);
+
+        if (!folder.exists() || !folder.isDirectory()) {
+            System.out.println("No screenshot folder: " + SCREENSHOT_FOLDER);
+            return;
+        }
+
+        File[] oldScreenshots = folder.listFiles((dir, name) ->
+                name.contains(timestampToday) && name.contains(timestampToday) && name.endsWith(".png")
         );
 
         if (oldScreenshots != null) {

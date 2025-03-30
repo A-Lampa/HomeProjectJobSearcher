@@ -1,6 +1,11 @@
 package test;
 
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -14,12 +19,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
+import static test.selenuimPages.general.AbstractPage.*;
+
 public class BaseTest {
     protected WebDriver driver;
     public static final Duration DEFAULT_IMPLICITLY_TIMEOUT = Duration.ofSeconds(10);
 
+    static ExtentReports extent;
+    static ExtentTest test;
+
+    @BeforeAll
+    static void setupReporter() {
+        deleteOldTodayScreenshots();
+        ExtentSparkReporter sparkReporter = new ExtentSparkReporter("SparkReporter.html");
+        extent = new ExtentReports();
+        extent.attachReporter(sparkReporter);
+    }
+
     @BeforeEach
     public void beforeTests() {
+        test = extent.createTest("Executing tests");
         driver = setUpDriver();
     }
 
@@ -89,5 +108,10 @@ public class BaseTest {
                 System.out.println("Error close WebDriver after test");
             }
         }
+    }
+
+    @AfterAll
+    static void tearDown() {
+        extent.flush(); // To save the report
     }
 }
