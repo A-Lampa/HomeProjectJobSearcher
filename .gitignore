@@ -1,0 +1,5 @@
+# Исключаем большие файлы
+src/test/java/test/AI/results/checkpoint-10/*
+src/test/java/test/AI/results/checkpoint-20/*
+src/test/java/test/AI/results/checkpoint-30/*
+src/test/java/test/AI/trained_model/*

@@ -9,6 +9,7 @@ import org.openqa.selenium.support.FindBy;
 import test.selenuimPages.general.AbstractPage;
 import test.selenuimPages.general.AbstractPanel;
 import test.selenuimPages.linkedIn.feedPage.LinkedInFeedPage;
+import test.selenuimPages.linkedIn.jobsPage.LinkedInJobsPage;
 
 import javax.annotation.Nonnull;
 
@@ -33,11 +34,36 @@ public class AbstractLinkedInTopPanel<ParentPage extends AbstractPage> extends A
         return new LinkedInFeedPage(driver);
     }
 
+    @FindBy(xpath = ".//input[@data-view-name=\"search-global-typeahead-input\"]")
+    private WebElement topSearch;
+
+    @FindBy(xpath = ".//span[@title=\"Home\"]//ancestor::a")
+    private WebElement homeButton;
+
+    @Step
+    public LinkedInFeedPage clickHomeButton() {
+        homeButton.click();
+        return new LinkedInFeedPage(driver);
+    }
+
+    //TODO
+
+    @FindBy(xpath = ".//span[@title=\"Jobs\"]//ancestor::a")
+    private WebElement jobsButton;
+
+    @Step
+    public LinkedInJobsPage clickJobsButton() {
+        jobsButton.click();
+        return new LinkedInJobsPage(driver);
+    }
+
     //TODO
 
     public AbstractLinkedInTopPanel(WebDriver driver, @Nonnull ParentPage parentPage) {
         super(driver, parentPage, PANEL_SELECTOR);
         Assertions.assertTrue(linkedInLogoButton.isDisplayed());
+        Assertions.assertTrue(topSearch.isDisplayed());
+        Assertions.assertTrue(homeButton.isDisplayed());
         //TODO
     }
 }
