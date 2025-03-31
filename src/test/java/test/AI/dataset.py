@@ -1,31 +1,32 @@
 import pandas as pd
 import torch
-from sklearn.model_selection import train_test_split
-from transformers import AutoTokenizer
+from transformers import BertTokenizer
 
-tokenizer = AutoTokenizer.from_pretrained("nlptown/bert-base-multilingual-uncased-sentiment")
+# Data processing, dataset creation and division into training/validation samples
 
-def load_data(csv_path):
-    df = pd.read_csv(csv_path)
-
-    train_texts, test_texts, train_labels, test_labels = train_test_split(
-        df["Vacancy"].tolist(), df["Score"].tolist(), test_size=0.2, random_state=42, stratify=labels
-    )
-
-    train_encodings = tokenizer(train_texts, truncation=True, padding=True, max_length=512)
-    test_encodings = tokenizer(test_texts, truncation=True, padding=True, max_length=512)
-
-    return (train_encodings, train_labels), (test_encodings, test_labels)
-
-class JobDataset(torch.utils.data.Dataset):
-    def __init__(self, encodings, labels):
-        self.encodings = encodings
+class VacancyDataset(torch.utils.data.Dataset):
+    def __init__(self, texts, labels, tokenizer, max_length=256):
+        self.encodings = tokenizer(texts, truncation=True, padding=True, max_length=max_length)
         self.labels = labels
+
+    def __getitem__(self, idx):
+        item = {k: torch.tensor(v[idx]) for k, v in self.encodings.items()}
+        item["labels"] = torch.tensor(self.labels[idx])
+        return item
 
     def __len__(self):
         return len(self.labels)
 
-    def __getitem__(self, idx):
-        item = {key: torch.tensor(val[idx]) for key, val in self.encodings.items()}
-        item["labels"] = torch.tensor(self.labels[idx])
-        return item
+def load_dataset(path, tokenizer, test_size=0.1):
+    df = pd.read_csv(path)
+    texts = df["Vacancy"].tolist()
+    labels = df["Score"].tolist()
+
+    from sklearn.model_selection import train_test_split
+    train_texts, val_texts, train_labels, val_labels = train_test_split(
+        texts, labels, test_size=test_size, random_state=42
+    )
+
+    train_dataset = VacancyDataset(train_texts, train_labels, tokenizer)
+    val_dataset = VacancyDataset(val_texts, val_labels, tokenizer)
+    return train_dataset, val_dataset

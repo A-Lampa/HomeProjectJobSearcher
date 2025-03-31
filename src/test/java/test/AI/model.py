@@ -1,7 +1,7 @@
-from transformers import AutoModelForSequenceClassification
+from transformers import BertForSequenceClassification
 
-def create_model():
-    model = AutoModelForSequenceClassification.from_pretrained("nlptown/bert-base-multilingual-uncased-sentiment",
-    num_labels=2,
-    ignore_mismatched_sizes=True)
+# Building a BERT-based model for classification
+
+def create_model(model_name="bert-base-uncased", num_labels=2):
+    model = BertForSequenceClassification.from_pretrained(model_name, num_labels=num_labels)
     return model
