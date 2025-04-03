@@ -1,5 +1,6 @@
 package test.selenuimPages.linkedIn.jobsPage;
 
+import org.openqa.selenium.WebDriver;
 import test.selenuimPages.linkedIn.LinkedInAbstractPage;
 
 /**
@@ -10,4 +11,7 @@ import test.selenuimPages.linkedIn.LinkedInAbstractPage;
  * @author Anna
  */
 public class LinkedInSavedJobsPage extends LinkedInAbstractPage {
+    public LinkedInSavedJobsPage(WebDriver driver) {
+        super(driver);
+    }
 }

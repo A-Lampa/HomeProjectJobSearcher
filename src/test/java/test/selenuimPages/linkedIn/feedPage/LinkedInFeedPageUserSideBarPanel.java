@@ -8,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import test.selenuimPages.general.AbstractPanel;
 import test.selenuimPages.linkedIn.LinkedInAbstractPage;
+import test.selenuimPages.linkedIn.jobsPage.LinkedInSavedJobsPage;
 
 import javax.annotation.Nonnull;
 
