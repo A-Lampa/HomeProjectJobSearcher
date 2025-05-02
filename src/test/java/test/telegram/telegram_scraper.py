@@ -4,9 +4,9 @@ import csv
 from datetime import datetime
 import pytz
 
-api_id = 23361291
-api_hash = '0814ee2807743a1bc513e05421338048'
-phone = '+79873070789'
+api_id =
+api_hash = ''
+phone = ''
 
 channels = [
     'https://t.me/evacuatejobs',
